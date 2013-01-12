@@ -2,7 +2,7 @@ import Image
 import time, urllib2, base64
 
 
-def getImageFast():
+def getImage():
 	# Basic HTTP Authentication...
 	url = 'http://192.168.1.116/videostream.cgi?user=admin&resolution=C&rate=6'
 	ww = 'admin:'
@@ -17,18 +17,17 @@ def getImageFast():
 		for a in b:
 			if a.startswith('Content-Length'):
 				readlen = str(a).split()[1]
-				print readlen
 		b1 = handle.read(int(readlen)+4)
 		return b1
 	
 	def parse_stream():
 		imgc = read_stream()
 		buf = Image.fromstring('RGB',(640,480),imgc[2:], 'jpeg', 'RGB', None)
-		return buf
+		return buf.convert("L")
 
 	return parse_stream()
 
 if __name__ == "__main__":
 	while True:
-		getImageFast().show()
+		getImage().show()
 		time.sleep(1)
