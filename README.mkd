@@ -1,0 +1,9 @@
+I needed a kind of naive motion detecting camera for a pet monitoring application.
+
+[Motion](https://github.com/sackmotion/motion), while excellent, was overcomplicated and didn't seem to support the IP camera I was using.
+
+[Python](http://imgs.xkcd.com/comics/python.png) to the rescue!
+
+The code is about fifteen lines, plausibly clean, and only on github in case I want to look at it later.
+
+Feel free to use and abuse it as you see fit. If we ever run into eachother, I guess you can buy me a brew or something.
