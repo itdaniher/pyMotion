@@ -8,16 +8,20 @@ import Image, requests, StringIO, numpy, time
 
 import filterfft
 
+import getFrameFromVideoStream
+
 # "best guess" threshold - seems to work alright with a bunch of false positives. 
 threshold = 480*640*256/1000
 
-def getImage():
+def getImageOld():
 	""" returns a 480x640 numpy array containing an image from a FOSCAM IP camera """
 	imageFile = StringIO.StringIO(requests.get("http://192.168.1.116/snapshot.cgi?user=admin&pwd=").content)
 	jpg = Image.open(imageFile)
 	# ITU-R 601-2 luma
 	jpg = jpg.convert("L")
 	return jpg
+
+getImage = getFrameFromVideoStream.getImage
 
 def ImageToArray(jpg):
 	a = numpy.fromstring(jpg.tostring(), "uint8").reshape((480,640))
@@ -36,17 +40,16 @@ def oneTick():
 	bf = getSmoothedArray()
 	# subtract images
 	diff = numpy.abs(numpy.sum(bf-af))
+	print diff
 	if diff > threshold:
 		fa = open(str(time.time()).split('.')[0]+".a.jpg", "wb")
 		fb = open(str(time.time()).split('.')[0]+".b.jpg", "wb")
-		Image.fromarray(a.astype("uint8")).save(fa)
-		Image.fromarray(b.astype("uint8")).save(fb)
-	print diff
+		Image.fromarray(af.astype("uint8")).save(fa)
+		Image.fromarray(bf.astype("uint8")).save(fb)
 
 if __name__ == "__main__":
 	while True:
 		try:
 			oneTick()
 		except:
-			print "napping"
 			time.sleep(10)
