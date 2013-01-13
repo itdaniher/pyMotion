@@ -21,9 +21,9 @@ def getImage():
 		return b1
 	
 	def parse_stream():
-		imgc = read_stream()
-		buf = Image.fromstring('RGB',(640,480),imgc[2:], 'jpeg', 'RGB', None)
-		return buf.convert("L")
+		jpg = read_stream()
+		img = Image.fromstring('RGB',(640,480),jpg[2:], 'jpeg', 'RGB', None)
+		return img
 
 	return parse_stream()
 

@@ -24,7 +24,8 @@ def getImageOld():
 getImage = getFrameFromVideoStream.getImage
 
 def ImageToArray(jpg):
-	a = numpy.fromstring(jpg.tostring(), "uint8").reshape((480,640))
+	# converts image to greyscale, load as numpy array
+	a = numpy.fromstring(jpg.convert("L").tostring(), "uint8").reshape((480,640))
 	return a
 
 def getSmoothedArray():
@@ -35,18 +36,23 @@ def getSmoothedArray():
 def viewArray(a):
 	Image.fromarray(a).show()
 
-def oneTick():
+def checkMotion():
 	af = getSmoothedArray()
 	bf = getSmoothedArray()
-	# subtract images
+	# subtract images, sum results
 	diff = int(numpy.abs(numpy.sum(bf-af)))
 	print diff
 	if diff > threshold:
-		t = time.time()
-		fa = open(str(t)+".a.jpg", "wb")
-		fb = open(str(t)+".b.jpg", "wb")
-		Image.fromarray(af.astype("uint8")).save(fa)
-		Image.fromarray(bf.astype("uint8")).save(fb)
+		return True
+	else:
+		return False
+
+def oneTick():
+	if checkMotion():
+		for i in range(10):
+			fname = str(time.time())+".jpg"
+			getImage().save(fname)
+			print "saved " + fname
 
 if __name__ == "__main__":
 	while True:
