@@ -11,7 +11,7 @@ import filterfft
 import getFrameFromVideoStream
 
 # "best guess" threshold - seems to work alright with a bunch of false positives. 
-threshold = 480*640*256/1000
+threshold = 480*640*256/500
 
 def getImageOld():
 	""" returns a 480x640 numpy array containing an image from a FOSCAM IP camera """
@@ -39,11 +39,12 @@ def oneTick():
 	af = getSmoothedArray()
 	bf = getSmoothedArray()
 	# subtract images
-	diff = numpy.abs(numpy.sum(bf-af))
+	diff = int(numpy.abs(numpy.sum(bf-af)))
 	print diff
 	if diff > threshold:
-		fa = open(str(time.time()).split('.')[0]+".a.jpg", "wb")
-		fb = open(str(time.time()).split('.')[0]+".b.jpg", "wb")
+		t = time.time()
+		fa = open(str(t)+".a.jpg", "wb")
+		fb = open(str(t)+".b.jpg", "wb")
 		Image.fromarray(af.astype("uint8")).save(fa)
 		Image.fromarray(bf.astype("uint8")).save(fb)
 
