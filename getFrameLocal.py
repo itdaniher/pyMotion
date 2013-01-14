@@ -12,7 +12,7 @@ def getImage():
 	
 	video.start()
 	
-	time.sleep(.1)
+	time.sleep(1)
 	
 	video.queue_all_buffers()
 	select.select((video,), (), ())
@@ -22,5 +22,5 @@ def getImage():
 	img = Image.fromstring("RGB", (640, 480), image_data)
 	return img
 
-if __name__ = "__main__":
+if __name__ == "__main__":
 	getImage().show()
