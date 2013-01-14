@@ -1,18 +1,11 @@
 #!/usr/bin/python
 
-# stupid-simple motion detection script with tons of dependencies
-
-# get a frame, convert it to greyscale, convert it to a numpy array, smooth it, subtract from previous frame, and if threshold, save the pair of frames
-
-import Image, requests, StringIO, numpy, time
+import Image, numpy, time
 
 import filterfft
 
-#import getFrameFromVideoStream.getImage as getImage
-import getFrameLocal.getImage as getImage
-
-# "best guess" threshold - seems to work alright with a bunch of false positives. 
-threshold = 480*640*256/500
+from getFrameFromVideoStream import getImage
+#from getFrameLocal import getImage
 
 def ImageToArray(jpg):
 	# converts image to greyscale, load as numpy array
@@ -27,19 +20,21 @@ def getSmoothedArray():
 def viewArray(a):
 	Image.fromarray(a).show()
 
-def checkMotion():
-	af = getSmoothedArray()
-	bf = getSmoothedArray()
-	# subtract images, sum results
-	diff = int(numpy.abs(numpy.sum(bf-af)))
-	print diff
-	if diff > threshold:
+
+def checkMotion(a, b):
+	c = numpy.abs(b-a)
+	thresh = c.mean() * 5
+	c = numpy.piecewise(c, [c > thresh, c <= thresh], [0xFF, 0])
+	s = numpy.abs(numpy.sum(c))
+	if s > 500000:
 		return True
 	else:
 		return False
 
 def oneTick():
-	if checkMotion():
+	af = getSmoothedArray()
+	bf = getSmoothedArray()
+	if checkMotion(af, bf):
 		for i in range(10):
 			fname = str(time.time())+".jpg"
 			getImage().save(fname)
