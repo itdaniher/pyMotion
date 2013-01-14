@@ -8,20 +8,11 @@ import Image, requests, StringIO, numpy, time
 
 import filterfft
 
-import getFrameFromVideoStream
+#import getFrameFromVideoStream.getImage as getImage
+import getFrameLocal.getImage as getImage
 
 # "best guess" threshold - seems to work alright with a bunch of false positives. 
 threshold = 480*640*256/500
-
-def getImageOld():
-	""" returns a 480x640 numpy array containing an image from a FOSCAM IP camera """
-	imageFile = StringIO.StringIO(requests.get("http://192.168.1.116/snapshot.cgi?user=admin&pwd=").content)
-	jpg = Image.open(imageFile)
-	# ITU-R 601-2 luma
-	jpg = jpg.convert("L")
-	return jpg
-
-getImage = getFrameFromVideoStream.getImage
 
 def ImageToArray(jpg):
 	# converts image to greyscale, load as numpy array
