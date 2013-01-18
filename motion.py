@@ -41,6 +41,7 @@ def oneTick():
 			print "saved " + fname
 
 if __name__ == "__main__":
+	print "Welcome to motion - successfully launched."
 	while True:
 		try:
 			oneTick()
