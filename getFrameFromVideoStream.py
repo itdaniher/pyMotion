@@ -4,7 +4,7 @@ import time, urllib2, base64
 
 def getImage():
 	# Basic HTTP Authentication...
-	url = 'http://192.168.1.116/videostream.cgi?user=admin&resolution=C&rate=6'
+	url = 'http://192.168.1.112/videostream.cgi?user=admin&resolution=C&rate=6'
 	ww = 'admin:'
 	encodedstring = base64.encodestring(ww)[:-1]
 	auth = "Basic %s" % encodedstring
